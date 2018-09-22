@@ -30,7 +30,7 @@ classdef descZernike
                    sum = 0;
                    if abs(r) <= 1
                       for k=0:(m-abs(n))/2
-                         sum = sum + ((-1^k) * (factorial(m - k)) / factorial(k) * factorial((m+abs(n))/2 - k) * factorial((m-abs(n))/2 - k) * r^(m-2*k));
+                         sum = sum + ((-1^k) * (factorial(m - k)) / (factorial(k) * factorial((m+abs(n))/2 - k) * factorial((m-abs(n))/2 - k)) * r^(m-2*k));
                       end
                    end
                    polynom(i,j) = sum * exp((j/256)*n*theta);
@@ -41,7 +41,6 @@ classdef descZernike
         
         % calcule tout un set de polynômes de Zernike
         function polynoms = getPolynoms()
-           
             polynoms = descZernike.getPolynom(0,0);
             for m = 1:descZernike.maxOrder
                 for n = m:-2:0
@@ -87,12 +86,10 @@ classdef descZernike
         
          % constructeur (à partir d'une image blanche sur noire)
          function dst = descZernike(shape)
-             disp('allo');
-             shape = descZernike.rescale(shape);
              % TODO Question 2 :
+             shape = descZernike.rescale(shape);
              dst.values = zeros(1,descZernike.descSize);
-             polynoms = descZernike.getPolynoms();
-            
+             polynoms = descZernike.polynoms;
              for k=1:descZernike.descSize
                 sum = 0; 
                 for i = 1:size(shape, 2)
