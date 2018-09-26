@@ -91,13 +91,9 @@ classdef descZernike
              dst.values = zeros(1,descZernike.descSize);
              polynoms = descZernike.polynoms;
              for k=1:descZernike.descSize
-                sum = 0; 
-                for i = 1:size(shape, 2)
-                    for j=1:size(shape, 1) 
-                       sum = sum + shape(i,j) * polynoms(i,j,k); 
-                    end
-                end
-                dst.values(k) = sum;
+                res = shape.*polynoms(1:(end - 1), 1:(end - 1), k);
+                som = sum(sum(res));
+                dst.values(k) = som;
              end
              dst.values = abs(dst.values);
          end
