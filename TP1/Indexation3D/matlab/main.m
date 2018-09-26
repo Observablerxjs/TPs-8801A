@@ -18,6 +18,8 @@ disp('FOURIER FINI');
 figure; d = descZernike(shape1); plot(d.values); title('Descripteur de Zernike 1');
 figure; d = descZernike(shape2); plot(d.values); title('Descripteur de Zernike 2');
 
+disp('ZERNIKE FINI');
+
 %% Base de données de plusieurs objets
 
 % Ce programme permet d'effectuer des requètes dans

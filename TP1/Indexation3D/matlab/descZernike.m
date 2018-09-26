@@ -23,17 +23,17 @@ classdef descZernike
             
             % TODO Question 2 :
             polynom = zeros(w,w);
-            for i=1:w
-                for j=1:w
-                   r = sqrt((i/256)^2 + (j/256)^2);
-                   theta = atan2(i/256, j/256);
+            for i=w/2:-1:-w/2
+                for j=-w/2:1:w/2
+                   r = sqrt((i/(w/2))^2 + (j/(w/2))^2);
+                   theta = atan2(i/(w/2), j/(w/2));
                    sum = 0;
                    if abs(r) <= 1
                       for k=0:(m-abs(n))/2
                          sum = sum + ((-1^k) * (factorial(m - k)) / (factorial(k) * factorial((m+abs(n))/2 - k) * factorial((m-abs(n))/2 - k)) * r^(m-2*k));
                       end
                    end
-                   polynom(i,j) = sum * exp((j/256)*n*theta);
+                   polynom(-i + w/2 + 1, j + w/2 + 1) = sum * exp(1j*n*theta);
                 end
             end
             
