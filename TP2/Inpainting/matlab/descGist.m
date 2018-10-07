@@ -31,6 +31,28 @@ classdef descGist
            filters = zeros( descGist.filterSize, descGist.filterSize, descGist.nbScales, descGist.nbOri );
            % TODO : Question 1
            % ...
+           stepTheta = pi / descGist.nbOri;
+           theta = 0;
+           
+           stepLda = 2;
+           lda = 1 / stepLda;
+           
+           sigmaX = 16 / (1 / lda);
+           sigmaY = 16 / (1 / lda);
+           
+           for i=1:descGist.nbOri
+               for j=1:descGist.nbScales
+                   filters(:, :, j, i) = descGist.getGabor(theta, lda, sigmaX, sigmaY);
+                   
+                   lda = 1 / (stepLda * j);
+                   sigmaX = 16 / (1 / lda);
+                   sigmaY = 16 / (1 / lda);
+               end
+               
+               lda = 1 / stepLda;
+               theta = theta + stepTheta;
+           end
+           
        end
        
        % retourne un filtre de Gabor
@@ -96,8 +118,15 @@ classdef descGist
            
            % réponses à chaque filtres de Gabor
            dst.values = zeros( descGist.gridSize, descGist.gridSize, descGist.nbScales, descGist.nbOri);
-           % TODO : Question 1
+           % TODO : Questison 1
            % ...
+           descGist.displayFilters();
+           for i=1:descGist.nbOri
+               for j=1:descGist.nbScales
+                   descGist.filters(:, :, j, i);
+               end
+           end
+                   
        end
        
        % distance entre deux descripteurs
