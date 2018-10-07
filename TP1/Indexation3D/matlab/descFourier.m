@@ -15,7 +15,6 @@ classdef descFourier
     methods
          % constructeur (ра partir d'une image blanche sur noire)
          function dst = descFourier(shape)
-            shape = im2bw(shape);
             % Vous pouvez utiliser les fonctions matlab :
             % bwtraceboundary, interp1, etc..
             
@@ -29,7 +28,7 @@ classdef descFourier
                     resB = (shape(i + 1, j - 1) ~= currPix) || (shape(i + 1, j) ~= currPix) || (shape(i + 1, j + 1) ~= currPix);
                     resG = shape(i, j - 1) ~= currPix;
                     resD = shape(i, j + 1) ~= currPix;
-                    if (resH || resB || resG || resD) && currPix == 1
+                    if (resH || resB || resG || resD) && currPix ~= 0
                        selPix = [i j];
                        break;
                     end

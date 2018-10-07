@@ -23,17 +23,17 @@ classdef descZernike
             
             % TODO Question 2 :
             polynom = zeros(w,w);
-            for i=1:w
-                for j=1:w
-                   r = sqrt((i/256)^2 + (j/256)^2);
-                   theta = atan2(i/256, j/256);
+            for i=w/2:-1:-w/2
+                for j=-w/2:1:w/2
+                   r = sqrt((i/(w/2))^2 + (j/(w/2))^2);
+                   theta = atan2(i/(w/2), j/(w/2));
                    sum = 0;
                    if abs(r) <= 1
                       for k=0:(m-abs(n))/2
-                         sum = sum + ((-1^k) * (factorial(m - k)) / factorial(k) * factorial((m+abs(n))/2 - k) * factorial((m-abs(n))/2 - k) * r^(m-2*k));
+                         sum = sum + ((-1^k) * (factorial(m - k)) / (factorial(k) * factorial((m+abs(n))/2 - k) * factorial((m-abs(n))/2 - k)) * r^(m-2*k));
                       end
                    end
-                   polynom(i,j) = sum * exp((j/256)*n*theta);
+                   polynom(-i + w/2 + 1, j + w/2 + 1) = sum * exp(1j*n*theta);
                 end
             end
             
@@ -41,7 +41,6 @@ classdef descZernike
         
         % calcule tout un set de polynômes de Zernike
         function polynoms = getPolynoms()
-           
             polynoms = descZernike.getPolynom(0,0);
             for m = 1:descZernike.maxOrder
                 for n = m:-2:0
@@ -87,20 +86,14 @@ classdef descZernike
         
          % constructeur (à partir d'une image blanche sur noire)
          function dst = descZernike(shape)
-             disp('allo');
-             shape = descZernike.rescale(shape);
              % TODO Question 2 :
+             shape = descZernike.rescale(shape);
              dst.values = zeros(1,descZernike.descSize);
-             polynoms = descZernike.getPolynoms();
-            
+             polynoms = descZernike.polynoms;
              for k=1:descZernike.descSize
-                sum = 0; 
-                for i = 1:size(shape, 2)
-                    for j=1:size(shape, 1) 
-                       sum = sum + shape(i,j) * polynoms(i,j,k); 
-                    end
-                end
-                dst.values(k) = sum;
+                res = shape.*polynoms(1:(end - 1), 1:(end - 1), k);
+                som = sum(sum(res));
+                dst.values(k) = som;
              end
              dst.values = abs(dst.values);
          end
