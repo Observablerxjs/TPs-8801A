@@ -11,7 +11,7 @@ function [ dst ] = poissonBlending( src, target, alpha )
     % TODO Question 2 :
     
     %nombre d'iterations
-    n = 100;
+    n = 1;
    
     deltaI = del2(double(target));
     
@@ -29,9 +29,9 @@ function [ dst ] = poissonBlending( src, target, alpha )
                 if results(i,j) ~= 0
                     if i > 10 && i < size(dst, 1) && j > 10 && j < size(dst, 2)
                         temp1 = antDst(i-10:i+10,j-10:j+10,:);
-                        temp2 = uint8(zeros(21,21,3));
-                        temp2(11,11,:) = antDst(i,j,:);
-                        dst(i,j,:) = sum(sum(temp1-temp2))./440 + deltaI(i,j,:); 
+                        temp2 = uint8(zeros(20,3,3));
+                        temp2(2,2,:) = antDst(i,j,:);
+                        dst(i,j,:) = sum(sum(temp1-temp2))./960 + deltaI(i,j,:); 
                     %elseif i ==1 && j == 1   
                     end
                 end
