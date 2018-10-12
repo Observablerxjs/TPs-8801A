@@ -29,7 +29,8 @@ classdef descGist
        function filters = getGabors()
            
            filters = zeros( descGist.filterSize, descGist.filterSize, descGist.nbScales, descGist.nbOri );
-           
+           % TODO : Question 1
+           % ...
            stepTheta = pi / descGist.nbOri;
            theta = 0;
            
@@ -117,19 +118,19 @@ classdef descGist
            
            % réponses à chaque filtres de Gabor
            dst.values = zeros( descGist.gridSize, descGist.gridSize, descGist.nbScales, descGist.nbOri);
-           
+           % TODO : Questison 1
+           % ...
            for i=1:descGist.nbOri
                for j=1:descGist.nbScales
-                   resTmp = conv2(src, descGist.filters(:, :, j, i), 'valid');
+                   resTmp = conv2(src, descGist.filters(:, :, j, i),'valid');
                    resTmp = resTmp(1:end - mod(size(resTmp, 1), 4), 1:end - mod(size(resTmp, 2), 4));
-      
-                   N = (size(resTmp, 1) / 4) * ones(1, 4);
-                   M = (size(resTmp, 2) / 4) * ones(1, 4);
-                   grids = mat2cell(resTmp, N, M);
+                       
+                   N = 4*ones(1, 4);
+                   grids = mat2cell(resTmp, [size(resTmp, 1) / 4 (size(resTmp, 1) / 4)]);
                    for k=1:descGist.gridSize
                        for z=1:descGist.gridSize
-                           siz = size(grids{k, z});
-                           dst.values(k, z, j, i) = sum(sum(grids{k, z}))/(siz(1) * siz(2));
+                           siz = size(grids(k, z));
+                           dst.values(k, z, j, i) = sum(sum(grids(k, z)))/(siz(1) * siz(2));
                        end
                    end
                end

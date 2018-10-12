@@ -11,6 +11,7 @@ function [ dst ] = poissonBlending( src, target, alpha )
     % TODO Question 2 :
     
     %nombre d'iterations
+    
     n = 100;
    
     deltaIR = 4*del2(double(target(:,:,1)));
@@ -22,6 +23,7 @@ function [ dst ] = poissonBlending( src, target, alpha )
     deltaI(:,:,2) = deltaIG;
     deltaI(:,:,3) = deltaIB;
            
+    
     alpha = double(repmat(alpha,[1,1,3]));
     alpha = alpha./max(alpha(:));
     dst = double(src) .* alpha;
