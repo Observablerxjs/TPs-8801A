@@ -4,7 +4,7 @@ clc
 
 %% Effectue un collage avec la méthode de Poisson
 
-folder = '../data/testPoisson/test2/';
+folder = '../data/testPoisson/test1/';
 
 % Image à compléter
 [src, ~, alpha] = imread([ folder 'src.png' ]);
