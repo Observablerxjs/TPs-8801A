@@ -21,7 +21,7 @@ clc
 %% Partie 2
 % Cloner des personnages dans une boucle
 
-    [ src, frameRate ] = readVideo( '../data/bmxLoop.mp4' );
+    [ src, frameRate ] = readVideo( '../data/clock_input.avi' );
     dst = clone( src, 3 );
-    writeGif( dst, '../data/dstClone.gif', frameRate );
+    writeGif( dst, '../data/dstClone2.gif', frameRate );
 

@@ -18,12 +18,14 @@ function [ dst ] = clone( src, nbClones )
     res = uint8(zeros(size(boucle, 1), size(boucle, 2)));
     
     
-    seuil = 5;
+    seuil = 20;
     
     for i=1: size(boucle, 4)
         res = rgb2gray(uint8(abs(double(boucle(:, :, :, i)) - double(fond))));
-        indices = find(res < seuil);
-        res(indices) = 0;
+        indicesLow = find(res < seuil);
+        indicesHigh = find(res >= seuil);
+        res(indicesLow) = 0;
+        res(indicesHigh) = 255;
         elem(:, :, i) = double(res) ./ 255;
     end
     
@@ -31,7 +33,8 @@ function [ dst ] = clone( src, nbClones )
     
     for i=1:size(boucle, 4)
         for j=1:nbClones
-            boucle(:, :, :, i) = boucle(:, :, :, i) + uint8(elem(:, :, mod((i + j * deph) - 1, size(boucle, 4)) + 1) .* ...
+            boucle(:, :, :, i) = boucle(:, :, :, i) - uint8(elem(:, :, mod((i + j * deph) - 1, size(boucle, 4)) + 1) .* double(boucle(:, :, :, i))) ...
+                                 + uint8(elem(:, :, mod((i + j * deph) - 1, size(boucle, 4)) + 1) .* ...
                                  double(boucle(:, :, :, mod((i + j * deph) - 1, size(boucle, 4)) + 1)));
         end
     end
