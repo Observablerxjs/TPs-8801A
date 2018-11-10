@@ -5,7 +5,7 @@ clc
 % Trouver la meilleure boucle dans une vidéo
 
     %% Lecture de la vidéo
-    [ src, frameRate ] = readVideo( '../data/clock_input.avi' );
+    [ src, frameRate ] = readVideo( '../data/bmxLoop.mp4' );
     
     %% Calcul de la boucle optimale
     % On cherche le couple de frames (début et fin) se ressembant le plus
