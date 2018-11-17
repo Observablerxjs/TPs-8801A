@@ -5,7 +5,7 @@ clc
 % Trouver la meilleure boucle dans une vidéo
 
     %% Lecture de la vidéo
-    [ src, frameRate ] = readVideo( '../data/bmxLoop.mp4' );
+    [ src, frameRate ] = readVideo( '../data/clock_input.avi' );
     
     %% Calcul de la boucle optimale
     % On cherche le couple de frames (début et fin) se ressembant le plus
@@ -21,7 +21,7 @@ clc
 %% Partie 2
 % Cloner des personnages dans une boucle
 
-    [ src, frameRate ] = readVideo( '../data/clock_input.avi' );
+    [ src, frameRate ] = readVideo( '../data/bmxLoop.mp4' );
     dst = clone( src, 3 );
-    writeGif( dst, '../data/dstClone2.gif', frameRate );
+    writeGif( dst, '../data/dstClone.gif', frameRate );
 
