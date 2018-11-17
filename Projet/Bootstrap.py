@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt 
 import matplotlib.image as mpimg
+import numpy as np
+from PIL import Image
 
 from EdgeDetection.EdgeDetection import EdgeDetection
 from Clipping.Clipping import Clipping
@@ -18,13 +20,16 @@ class Bootstrap:
 
         #else:
             #processedImage = 
-        image = mpimg.imread('./asl_alphabet_test/A_test.jpg')
+        img = Image.open('./asl_alphabet_test/K_test.jpg').convert('L')
+        image = np.asarray(img)
         edges = self.edgeDetec.detect_edges(image)
-        plot = plt.imshow(edges)
+        test2 = np.asarray(edges)
+        test = Image.fromarray(test2)
+        plot = plt.imshow(test)
         plt.show()
 
-        clippedEdges = self.clip.clip(edges)
-        plot = plt.imshow(clippedEdges)
-        plt.show()
+        #clippedEdges = self.clip.clip(edges)
+        #plot = plt.imshow(clippedEdges)
+        #plt.show()
             
 
