@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import cv2
+import copy
 from PIL import Image
 import matplotlib.pyplot as plt
 
@@ -9,8 +10,8 @@ from scipy.ndimage import sobel
 
 class EdgeDetection:
     def __init__(self):
-        self.threshold_1 = 220
-        self.threshold_2 = 150
+        self.threshold_1 = 0
+        self.threshold_2 = 0
 
     def calc_offset(self, angle):
         if math.cos(angle) == 0:
@@ -21,7 +22,7 @@ class EdgeDetection:
             dk = 0
         else:
             dk = math.sin(angle) / abs(math.sin(angle))
-        return [dl, dk]
+        return [int(round(dl)), int(round(dk))]
     
     def round_angles(self, angles):
         ret_angles = np.zeros((len(angles), len(angles[0])))
@@ -52,18 +53,9 @@ class EdgeDetection:
 
     def non_maxima_supp(self, grad_image):
         grad_mags = grad_image[0].tolist()
-        # print(grad_mags)
-
-        testarray = np.asarray(grad_mags)
-        testImg = Image.fromarray(testarray)
-        plot = plt.imshow(testImg)
-        plt.show()
-
-        #print('grad_mags', grad_mags)
         grad_angles = grad_image[1].tolist()
 
-        #print('len(grad_mags)',len(grad_mags))
-        #print('len(grad_mags[0])',len(grad_mags[0]))
+        grad_mags_ret = copy.deepcopy(np.asarray(grad_mags)).tolist()
 
         for i in range(0, len(grad_mags)):
             for j in range(0, len(grad_mags[i])):
@@ -82,32 +74,30 @@ class EdgeDetection:
                     dl = offset[0]
                     dk = offset[1]
 
-                    while grad_mags[l][k] < grad_mags[int(l + dl)][int(k + dk)] or grad_mags[l][k] < grad_mags[int(l - dl)][int(k - dk)]:
+                    while grad_mags[l][k] < grad_mags[l + dl][k + dk] or grad_mags[l][k] < grad_mags[l - dl][k - dk]:
+                        if l==141 and k==21:
+                            print(l - dl, ' ', k - dk,'  ',l, ' ', k, '  ', l + dl, ' ', k + dk)
+                        grad_mags_ret[l][k] = 0
 
-                        grad_mags[l][k] = 0
-
-                        if grad_mags[int(l + dl)][int(k + dk)] > grad_mags[int(l - dl)][int(k - dk)]:
-                            l = int(l + dl)
-                            k = int(k + dk)
+                        if grad_mags[l + dl][k + dk] > grad_mags[l - dl][k - dk]:
+                            l = l + dl
+                            k = k + dk
                         else:
-                            l = int(l - dl)
-                            k = int(k - dk)
+                            l = l - dl
+                            k = k - dk
 
                         offset = self.calc_offset(grad_angles[l][k])
                         dl = offset[0]
                         dk = offset[1]
 
-        return grad_mags
+        return grad_mags_ret
 
     #calculate the mask in function of the tresholds.
     #2 indicates a strong edge. 1 indicates a weak edge. 0 indicates a edge to cut
     def class_thresholding(self, image_maxima):
-        mask = np.zeros((len(image_maxima), len(image_maxima[0])))
-        print('len 1', len(image_maxima))
-        print('len 2', len(image_maxima[0]))
+        mask = np.zeros((len(image_maxima), len(image_maxima[0]))).astype('uint8')
         for i in range(0, len(image_maxima)):
             for j in range(0, len(image_maxima[i])):
-                print('i',i,'j',j)
                 if image_maxima[i][j] > self.threshold_1:
                     mask[i][j] = 2
                 elif image_maxima[i][j] < self.threshold_1 and image_maxima[i][j] > self.threshold_2:
@@ -148,24 +138,24 @@ class EdgeDetection:
         return mask
 
     def apply_mask(self, mask, maxima):
-        mask = (np.matrix(mask) / 2).tolist()
-        return (np.matrix(mask) * np.matrix(maxima)).tolist()
+        mask = (mask / 2)
+
+        return (np.multiply(mask, np.array(maxima))).tolist()
 
     def detect_edges(self, image):
 
         grad_image = self.operator(image)
         
         image_maxima = self.non_maxima_supp(grad_image)
-        print(image_maxima)
         
         mask = self.class_thresholding(image_maxima)
 
-        updated_mask = self.hysterisis(mask, image_maxima)
-
-        testarray = np.asarray(image_maxima)
-        testImg = Image.fromarray(testarray)
-        plot = plt.imshow(testImg)
+        test2 = np.asarray(image_maxima)
+        test = Image.fromarray(test2.astype('uint8'))
+        plot = plt.imshow(test)
         plt.show()
+
+        updated_mask = self.hysterisis(mask, image_maxima)
 
         return self.apply_mask(updated_mask, image_maxima)
 
