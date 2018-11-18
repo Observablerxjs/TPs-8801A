@@ -20,7 +20,7 @@ class Bootstrap:
 
         #else:
             #processedImage = 
-        img = Image.open('./asl_alphabet_test/C_test.jpg').convert('L')
+        img = Image.open('./asl_alphabet_test/C3_test.jpeg').convert('L')
         image = np.asarray(img)
 
         edges = self.edgeDetec.detect_edges(image)
