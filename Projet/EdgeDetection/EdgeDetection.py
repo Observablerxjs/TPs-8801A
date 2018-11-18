@@ -10,8 +10,8 @@ from scipy.ndimage import sobel
 
 class EdgeDetection:
     def __init__(self):
-        self.threshold_1 = 0
-        self.threshold_2 = 0
+        self.threshold_1 = 80
+        self.threshold_2 = 65
 
     def calc_offset(self, angle):
         if math.cos(angle) == 0:
@@ -75,9 +75,9 @@ class EdgeDetection:
                     dk = offset[1]
 
                     while grad_mags[l][k] < grad_mags[l + dl][k + dk] or grad_mags[l][k] < grad_mags[l - dl][k - dk]:
-                        if l==141 and k==21:
-                            print(l - dl, ' ', k - dk,'  ',l, ' ', k, '  ', l + dl, ' ', k + dk)
-                        grad_mags_ret[l][k] = 0
+                        if not(grad_mags[l][k] >= grad_mags[l][k - 1] and grad_mags[l][k] >= grad_mags[l][k + 1] or
+                               grad_mags[l][k] >= grad_mags[l - 1][k] and grad_mags[l][k] >= grad_mags[l + 1][k]):
+                            grad_mags_ret[l][k] = 0
 
                         if grad_mags[l + dl][k + dk] > grad_mags[l - dl][k - dk]:
                             l = l + dl
@@ -104,13 +104,13 @@ class EdgeDetection:
                     mask[i][j] = 1
         return mask
 
-    def hysterisis_rec(self, mask, l, k):
+    def hysterisis_rec(self, mask, l, k, old_l, old_k):
         no_more_edge = True
         
         for m in range(-1, 1):
             for n in range(-1, 1):
-                if not(m == 0 and n == 0):
-                    no_more_edge = True if mask[l + m][k + n] != 0 else no_more_edge
+                if not(m == 0 and n == 0) and not(old_l == l + m and old_k == k + n):
+                    no_more_edge = False if mask[l + m][k + n] != 0 else no_more_edge
 
         if no_more_edge:
             return False
@@ -118,8 +118,8 @@ class EdgeDetection:
         res = False
         for m in range(-1, 1):
             for n in range(-1, 1):
-                if not(m == 0 and n == 0) and mask[l + m][k + n] != 0:
-                    res = res or self.hysterisis_rec(mask, l + m, k + n)
+                if not(m == 0 and n == 0) and not(old_l == l + m and old_k == k + n) and (mask[l + m][k + n] != 0):
+                    res = res or self.hysterisis_rec(mask, l + m, k + n, l, k)
 
         res = res or mask[l, k] == 2
 
@@ -129,7 +129,7 @@ class EdgeDetection:
         for i in range(0, len(maxima)):
             for j in range(0, len(maxima[i])):
                 if mask[i][j] == 1:
-                    is_strong = self.hysterisis_rec(mask, i, j)
+                    is_strong = self.hysterisis_rec(mask, i, j, i, j)
                     if is_strong:
                         mask[i][j] = 2
                     else:
@@ -149,11 +149,6 @@ class EdgeDetection:
         image_maxima = self.non_maxima_supp(grad_image)
         
         mask = self.class_thresholding(image_maxima)
-
-        test2 = np.asarray(image_maxima)
-        test = Image.fromarray(test2.astype('uint8'))
-        plot = plt.imshow(test)
-        plt.show()
 
         updated_mask = self.hysterisis(mask, image_maxima)
 
