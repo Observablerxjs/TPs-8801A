@@ -15,7 +15,7 @@ class Clipping:
 
     def calculY1(self):
         y1 = len(self.image)
-        for i in range(len(self.image), 0, -1):
+        for i in range(len(self.image) - 1, 0, -1):
             for j in range(0, len(self.image[i])):
                 if j < len(self.image[i]) - 3:
                     if self.image[i][j] == WHITE_PIXEL and self.image[i][j+1] == WHITE_PIXEL and self.image[i][j+1] == WHITE_PIXEL:
@@ -26,7 +26,7 @@ class Clipping:
     def calculY2(self):
         y2 = len(self.image)
         diff = -1
-        for i in range(len(self.image), 0, -1):
+        for i in range(len(self.image) - 1, 0, -1):
             first_white_pixel = -1
             last_white_pixel = len(self.image[i])
             for j in range(0,len(self.image[i])):

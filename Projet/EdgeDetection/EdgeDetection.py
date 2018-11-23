@@ -11,27 +11,32 @@ from scipy.ndimage import sobel
 class EdgeDetection:
     def __init__(self):
         self.threshold_1 = 80
-        self.threshold_2 = 65
+        self.threshold_2 = 80
 
     def calc_offset(self, angle):
-        if math.cos(angle) == 0:
-          dl = 0
-        else:
-            dl = math.cos(angle) / abs(math.cos(angle))
-        if math.sin(angle) == 0:
+
+        epsilon = 0.0001
+
+        if abs(math.cos(angle)) < epsilon:
             dk = 0
         else:
-            dk = math.sin(angle) / abs(math.sin(angle))
+            dk = math.cos(angle) / abs(math.cos(angle))
+        
+        if abs(math.sin(angle)) < epsilon:
+            dl = 0
+        else:
+            dl = math.sin(angle) / abs(math.sin(angle))
+        
         return [int(round(dl)), int(round(dk))]
     
     def round_angles(self, angles):
         ret_angles = np.zeros((len(angles), len(angles[0])))
-        comp = math.pi / 16
+        comp = math.pi / 8
 
         for i in range(0, len(angles)):
             for j in range (0, len(angles[0])):
-                for k in range(0, 7):
-                    ret_angles[i][j] = k * math.pi / 8 if angles[i][j] - k * math.pi / 8 <= comp else ret_angles[i][j]
+                for k in range(-4, 5):
+                    ret_angles[i][j] = k * math.pi / 4 if abs(angles[i][j] - k * math.pi / 4) <= comp else ret_angles[i][j]
 
         return ret_angles
     
@@ -42,12 +47,8 @@ class EdgeDetection:
         sobel_y = cv2.Sobel(filtered_image, cv2.CV_64F, 0, 1, ksize=5)
 
         grad_mags = np.sqrt(np.square(np.array(sobel_x)) + np.square(np.array(sobel_y)))
-        grad_mags = (grad_mags / np.amax(np.amax(grad_mags, 1), 0))*255
-        grad_mags = grad_mags.astype(int)
 
-        second_sobel_x = sobel(grad_mags.tolist(), 0)
-        second_sobel_y = sobel(grad_mags.tolist(), 1)
-        grad_angles = self.round_angles(np.arctan(np.divide(np.array(second_sobel_y), np.array(second_sobel_x))))
+        grad_angles = self.round_angles(np.arctan2(np.array(sobel_y), np.array(sobel_x)))
         
         return [grad_mags, grad_angles]
 
@@ -60,62 +61,22 @@ class EdgeDetection:
                 if i == 0 or j == 0 or i == len(grad_mags) - 1 or j == len(grad_mags[i]) - 1:
                     grad_mags[i][j] = 0
 
-        grad_mags_ret = copy.deepcopy(np.asarray(grad_mags)).tolist()
+        grad_mags_ret = np.zeros((len(grad_mags), len(grad_mags[0]))).tolist()
 
         for i in range(0, len(grad_mags)):
             for j in range(0, len(grad_mags[i])):
-                
                 if grad_mags[i][j] > 0:
-                    l = i
-                    k = j
                     offset = self.calc_offset(grad_angles[i][j])
 
-                    dl = offset[0]
-                    dk = offset[1]
+                    di = offset[0]
+                    dj = offset[1]
 
-                    while grad_mags[l][k] < grad_mags[l + dl][k + dk] or grad_mags[l][k] < grad_mags[l - dl][k - dk]:
-                        if not(grad_mags[l][k] >= grad_mags[l][k - 1] and grad_mags[l][k] >= grad_mags[l][k + 1] or 
-                                grad_mags[l][k] >= grad_mags[l - 1][k] and grad_mags[l][k] >= grad_mags[l + 1][k]):
+                    if grad_mags[i][j] > grad_mags[i + di][j + dj] and grad_mags[i][j] > grad_mags[i - di][j - dj]:
+                        grad_mags_ret[i][j] = grad_mags[i][j]
 
-                            grad_mags_ret[l][k] = 0
-
-                        if grad_mags[l + dl][k + dk] > grad_mags[l - dl][k - dk]:
-                            l = l + dl
-                            k = k + dk
-                        else:
-                            l = l - dl
-                            k = k - dk
-
-                        offset = self.calc_offset(grad_angles[l][k])
-                        dl = offset[0]
-                        dk = offset[1]
-
-        for l in range(0, len(grad_mags_ret)):
-            for k in range(0, len(grad_mags_ret[l])):
-                if grad_mags_ret[l][k] > 0:
-                    count = 0
-                    count = count + 1 if grad_mags_ret[l][k - 1] != 0 else count
-                    count = count + 1 if grad_mags_ret[l][k + 1] != 0 else count
-                    count = count + 1 if grad_mags_ret[l - 1][k] != 0 else count
-                    count = count + 1 if grad_mags_ret[l + 1][k] != 0 else count
-
-                    count = count + 1 if grad_mags_ret[l - 1][k - 1] != 0 else count
-                    count = count + 1 if grad_mags_ret[l - 1][k + 1] != 0 else count
-                    count = count + 1 if grad_mags_ret[l + 1][k + 1] != 0 else count
-                    count = count + 1 if grad_mags_ret[l + 1][k - 1] != 0 else count
-                    
-                    if l == 298 and k == 140:
-                        print(grad_mags_ret[l][k - 1])
-                        print(grad_mags_ret[l][k + 1])
-                        print(grad_mags_ret[l - 1][k])
-                        print(grad_mags_ret[l + 1][k])
-                        print(grad_mags_ret[l - 1][k - 1])
-                        print(grad_mags_ret[l - 1][k + 1])
-                        print(grad_mags_ret[l + 1][k + 1])
-                        print(grad_mags_ret[l + 1][k - 1])
-
-                    if count >= 4:
-                        grad_mags_ret[l][k] = 0
+        grad_mags_ret = ((grad_mags_ret - np.amin(np.amin(grad_mags_ret, 1), 0)) / (np.amax(np.amax(grad_mags_ret, 1), 0)
+                          - np.amin(np.amin(grad_mags_ret, 1), 0))) * 255
+        grad_mags_ret = grad_mags_ret.astype(int)
 
         return grad_mags_ret
 

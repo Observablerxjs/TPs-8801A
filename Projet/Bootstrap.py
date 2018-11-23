@@ -25,12 +25,12 @@ class Bootstrap:
 
         edges = self.edgeDetec.detect_edges(image)
 
-        test2 = np.asarray(edges)
+        clippedEdges = self.clip.clip(edges)
+
+        test2 = np.asarray(clippedEdges)
         test = Image.fromarray(test2)
         plot = plt.imshow(test)
         plt.show()
-
-        #clippedEdges = self.clip.clip(edges)
         #plot = plt.imshow(clippedEdges)
         #plt.show()
             
