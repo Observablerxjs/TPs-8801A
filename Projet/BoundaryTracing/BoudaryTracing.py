@@ -63,9 +63,6 @@ class BoundaryTracing:
         x = self.initial_trace_point[0]
         y = self.initial_trace_point[1]
         count = 0
-        print('pixel initial', self.image[y][x])
-        print(x, ' ', y, ' ', self.LR, ' ', self.UD)
-        print('xmaxx', self.maxx)
 
         mask = np.zeros((len(self.image), len(self.image[0])))
         while x != self.maxx:
