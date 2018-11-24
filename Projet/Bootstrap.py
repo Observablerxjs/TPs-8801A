@@ -3,35 +3,42 @@ import matplotlib.image as mpimg
 import numpy as np
 from PIL import Image
 
-from EdgeDetection.EdgeDetection import EdgeDetection
-from Clipping.Clipping import Clipping
+from Utils.ArgParser import ArgParser
+from Classifier.DescriptorGenerator import DescriptorGenerator
+from Pipeline.Pipeline import Pipeline
 
-class Bootstrap:
+from Training.Trainer import Trainer
+
+from Shared.Borg import Borg
+from Shared.Parameters import Parameters
+
+class Bootstrap(Borg):
     def __init__(self):
-        #self.iimProc =
-        #self.fingDetec =
-        self.edgeDetec = EdgeDetection()
-        self.clip = Clipping()
-        #self.classifier = 
-        #self.boundTrac =
+        args = ArgParser.parse()
+        Parameters.set_parameters({
+            'mode' : args.mode,
+            'input_image' : args.input_image,
+            'training_set' : args.training_set,
+            'model_path' :args.model_path
+        })
 
     def run(self):
-        #if
+        p = Parameters().get_parameters()
 
-        #else:
-            #processedImage = 
-        img = Image.open('./asl_alphabet_test/C3_test.jpeg').convert('L')
-        image = np.asarray(img)
+        if p['mode'] == 'training': 
+            Trainer().train()
 
-        edges = self.edgeDetec.detect_edges(image)
+        elif p['mode'] == 'classification':
+            print('hello')
+        
+        else:
+            img = np.asarray(Image.open('./asl_alphabet_test/U_test.jpg').convert('L'))
+            res = Pipeline().run(img)
+            test2 = np.asarray(res)
+            test = Image.fromarray(test2)
+            plot = plt.imshow(test)
+            plt.show()
 
-        clippedEdges = self.clip.clip(edges)
-
-        test2 = np.asarray(clippedEdges)
-        test = Image.fromarray(test2)
-        plot = plt.imshow(test)
-        plt.show()
-        #plot = plt.imshow(clippedEdges)
-        #plt.show()
+        
             
 

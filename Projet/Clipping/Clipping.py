@@ -10,7 +10,6 @@ class Clipping:
         self.image = np.asarray(edgesImage)
         y1 = self.calculY1()
         y2 = self.calculY2()
-        print('y1', y1, 'y2', y2)
         clipping_level = max(y1, y2)
         for i in range(clipping_level, len(self.image)):
             zeros = np.zeros(len(self.image[i])).astype('uint8')

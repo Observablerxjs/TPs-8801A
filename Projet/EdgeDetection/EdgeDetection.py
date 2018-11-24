@@ -10,8 +10,8 @@ from scipy.ndimage import sobel
 
 class EdgeDetection:
     def __init__(self):
-        self.threshold_1 = 80
-        self.threshold_2 = 80
+        self.threshold_1 = 10
+        self.threshold_2 = 5
 
     def calc_offset(self, angle):
 
@@ -141,9 +141,3 @@ class EdgeDetection:
         updated_mask = self.hysterisis(mask, image_maxima)
 
         return self.apply_mask(updated_mask, image_maxima)
-
-
-
-
-
-
