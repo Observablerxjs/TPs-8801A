@@ -1,5 +1,4 @@
 import argparse
-from Shared.Parameters import Parameters
 
 
 class ArgParser:
@@ -8,16 +7,8 @@ class ArgParser:
         parser = argparse.ArgumentParser(
             description='Relay between Oronos rocket & clients (PC/tablets).')
 
-        parser.add_argument('-b', '--baudrate', type=int,
-                            help='Baudrate of the serial port')
-        parser.add_argument('-c', '--connector_type',
-                            help='Data source', choices=['serial', 'simulation'], default='simulation')
-        parser.add_argument('-f', '--connector_file',
-                            help='Connector type. COM serial port or CSV file')
-        parser.add_argument('-s', '--server', type=int, default=3000,
-                            help='Activates a server listening on a certain port')
-        parser.add_argument('-r', '--rocket', default='11_valkyrieM2.xml',
-                            help='XML configuration file')
-        parser.add_argument('-m', '--map', default='spaceport_america',
-                            help='Name of the map in Config/Other/Maps.xml')
+        parser.add_argument('-m', '--mode', help='Mode of execution', choices=['training', 'classification', 'article'], default='article')
+        parser.add_argument('-i', '--input_image', help='Image to process', default='./asl_alphabet_test/A_test.jpg')
+        parser.add_argument('-s', '--training_set', help='Data set', default='./TrainingSet/')
+        parser.add_argument('-mp', '--model_path', help='Model path', default='./TrainedModel/model.txt') 
         return parser.parse_args()
