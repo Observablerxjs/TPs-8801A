@@ -36,4 +36,5 @@ class DescriptorGenerator:
 
     @staticmethod
     def distance(desc1, desc2):
-        
+        return 0
+

@@ -92,10 +92,6 @@ class BoundaryTracing:
             else:
                 self.LR = 0
 
-            if x == 113 and y == 64:
-                print('x', x, 'y', y, 'pixel:', self.image[y][x], 'LR', self.LR, 'UD', self.UD)
-                break
-
             if self.UD == 1:
                 y = y - 1
             elif self.UD == -1:
