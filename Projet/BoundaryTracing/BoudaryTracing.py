@@ -1,4 +1,6 @@
 import math
+from PIL import Image
+import matplotlib.pyplot as plt
 import numpy as np
 
 WHITE_PIXEL = 255
@@ -61,19 +63,48 @@ class BoundaryTracing:
         x = self.initial_trace_point[0]
         y = self.initial_trace_point[1]
         count = 0
-        print(x, ' ', y, ' ', self.LR, ' ', self.UD)
 
         mask = np.zeros((len(self.image), len(self.image[0])))
         while x != self.maxx:
+            if (self.image[y][x-1] != BLACK_PIXEL and self.LR != 1) or\
+                    (self.image[y][x + 1] != BLACK_PIXEL and self.LR != -1 and self.image[y+1][x+1] == BLACK_PIXEL):
+                self.UD = 0
+            elif (self.image[y - 1][x] != BLACK_PIXEL and self.UD != -1)or(self.image[y - 1][x - 1] != BLACK_PIXEL and self.LR == -1) or (self.image[y - 1][x + 1] != BLACK_PIXEL and self.LR == 1):
+                self.UD = 1
+            elif (self.image[y + 1][x] != BLACK_PIXEL and self.UD != 1) or (self.image[y + 1][x - 1] != BLACK_PIXEL and self.LR == -1) or (self.image[y + 1][x + 1] != BLACK_PIXEL and self.LR == 1):
+                self.UD = -1
+
+            if self.image[y - self.UD][x - 1] != BLACK_PIXEL and self.LR != 1:
+                self.LR = -1
+            elif self.image[y - self.UD][x + 1] != BLACK_PIXEL and self.LR != -1:
+                self.LR = 1
+            else:
+                self.LR = 0
+
+            if x == 113 and y == 64:
+                print('x', x, 'y', y, 'pixel:', self.image[y][x], 'LR', self.LR, 'UD', self.UD)
+                break
+
             if self.UD == 1:
                 y = y - 1
             elif self.UD == -1:
                 y = y + 1
 
-            if self.LR == 1 and self.image[y][x+1] != BLACK_PIXEL:
+            if self.LR == 1:
                 x = x + 1
-            elif self.LR == -1 and self.image[y][x-1] != BLACK_PIXEL:
+            elif self.LR == -1:
                 x = x - 1
+
+            count += 1
+            if count == 5:
+                mask[y][x] = 255
+                count = 0
+            #print('x', x, 'y', y, 'pixel:', self.image[y][x], 'LR', self.LR, 'UD', self.UD)
+
+        test2 = np.asarray(mask)
+        test = Image.fromarray(test2)
+        plot = plt.imshow(test)
+        plt.show()
 
     def calcul_minx(self):
         minx = 0

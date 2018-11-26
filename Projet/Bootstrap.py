@@ -32,7 +32,7 @@ class Bootstrap(Borg):
             print('hello')
         
         else:
-            img = np.asarray(Image.open('./asl_alphabet_test/U_test.jpg').convert('L'))
+            img = np.asarray(Image.open('./asl_alphabet_test/I_test.jpg').convert('L'))
             res = Pipeline().run(img)
             test2 = np.asarray(res)
             test = Image.fromarray(test2)
