@@ -7,6 +7,7 @@ from Utils.ArgParser import ArgParser
 from Classifier.DescriptorGenerator import DescriptorGenerator
 from Pipeline.Pipeline import Pipeline
 
+from Utils.ReadWrite import ReadWrite
 from Training.Trainer import Trainer
 
 from Shared.Borg import Borg
@@ -29,7 +30,25 @@ class Bootstrap(Borg):
             Trainer().train()
 
         elif p['mode'] == 'classification':
-            print('hello')
+            img = np.asarray(Image.open(p['input_image']).convert('L'))
+            data = Pipeline().run(img)
+            desc_i = DescriptorGenerator.generate_descriptor(data)
+
+            descs = ReadWrite.read(p['model_path'])
+            
+            min_diff = float("int")
+            letter_actu = "_"
+
+            for i in descs:
+                nw_letter = i[0]
+                nw_desc = [str(j) for j in range(1, len(i))]
+                dist_actu = DescriptorGenerator.distance(desc_i, nw_desc)
+                if dist_actu < min_diff:
+                    min_diff = dist_actu
+                    letter_actu = nw_letter
+
+            print(letter_actu)
+
         
         else:
             img = np.asarray(Image.open('./asl_alphabet_test/I_test.jpg').convert('L'))
