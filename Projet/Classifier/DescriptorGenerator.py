@@ -8,7 +8,7 @@ class DescriptorGenerator:
 
     @staticmethod
     def generate_origin_descriptor():
-        return [0] * (DescriptorGenerator.nb_points + 1)
+        return [0] * (DescriptorGenerator.desc_size + 1)
 
     @staticmethod
     def generate_descriptor(data):
