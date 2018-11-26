@@ -64,8 +64,13 @@ class BoundaryTracing:
         y = self.initial_trace_point[1]
         count = 0
 
+        ret_points = []
+        fingertip = 0
+
         mask = np.zeros((len(self.image), len(self.image[0])))
+        
         while x != self.maxx:
+
             if (self.image[y][x-1] != BLACK_PIXEL and self.LR != 1) or\
                     (self.image[y][x + 1] != BLACK_PIXEL and self.LR != -1 and self.image[y+1][x+1] == BLACK_PIXEL):
                 self.UD = 0
@@ -99,8 +104,14 @@ class BoundaryTracing:
             if count == 5:
                 mask[y][x] = 255
                 count = 0
-            #print('x', x, 'y', y, 'pixel:', self.image[y][x], 'LR', self.LR, 'UD', self.UD)
 
+            ret_points.append([x, y])
+
+            print(old_UD, ' ', self.UD)
+            if old_UD != -1 and self.UD == -1:
+                fingertip += 1
+
+        print(fingertip)
         test2 = np.asarray(mask)
         test = Image.fromarray(test2)
         plot = plt.imshow(test)
