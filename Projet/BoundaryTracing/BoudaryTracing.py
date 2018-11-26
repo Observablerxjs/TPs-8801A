@@ -68,8 +68,9 @@ class BoundaryTracing:
         fingertip = 0
 
         mask = np.zeros((len(self.image), len(self.image[0])))
-        
         while x != self.maxx:
+
+            old_UD = self.UD
 
             if (self.image[y][x-1] != BLACK_PIXEL and self.LR != 1) or\
                     (self.image[y][x + 1] != BLACK_PIXEL and self.LR != -1 and self.image[y+1][x+1] == BLACK_PIXEL):
