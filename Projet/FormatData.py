@@ -1,6 +1,8 @@
 import os
 import glob
 import cv2
+from PIL import Image
+import numpy as np
 
 curpath = os.path.abspath(os.curdir)
 
@@ -16,5 +18,5 @@ for img_path in images:
     constant = cv2.copyMakeBorder(img, 10, 10, 10, 10, cv2.BORDER_CONSTANT,value=BLACK)
     out = [i + "_" for i in img_path.split('_')[1:-2]]
     out.append(img_path.split('_')[-1])
-    with open(curpath + output_path + "".join(out), 'wb+') as f:
-        f.write(constant)
+    result = Image.fromarray(constant.astype(np.uint8))
+    result.save(curpath + output_path + "".join(out))
