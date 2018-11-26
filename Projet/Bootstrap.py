@@ -36,7 +36,7 @@ class Bootstrap(Borg):
 
             descs = ReadWrite.read(p['model_path'])
             
-            min_diff = float("int")
+            min_diff = float("inf")
             letter_actu = "_"
 
             for i in descs:
@@ -53,10 +53,7 @@ class Bootstrap(Borg):
         else:
             img = np.asarray(Image.open('./asl_alphabet_test/I_test.jpg').convert('L'))
             res = Pipeline().run(img)
-            test2 = np.asarray(res)
-            test = Image.fromarray(test2)
-            plot = plt.imshow(test)
-            plt.show()
+            print(res[1])
 
         
             
