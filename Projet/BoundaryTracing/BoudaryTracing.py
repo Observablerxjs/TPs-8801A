@@ -6,6 +6,7 @@ import numpy as np
 WHITE_PIXEL = 255
 BLACK_PIXEL = 0
 
+
 class BoundaryTracing:
     def __init__(self):
         self.image = None
@@ -24,8 +25,7 @@ class BoundaryTracing:
         self.miny = self.calcul_miny()
         self.maxy = self.calcul_maxy()
         self.initial_trace_direction()
-        self.trace()
-        self.flush()
+        return self.trace()
 
     def flush(self):
         self.image = None
@@ -67,15 +67,13 @@ class BoundaryTracing:
         ret_points = []
         fingertip = 0
 
-        count_U = 0
+        count_up = 0
 
         mask = np.zeros((len(self.image), len(self.image[0])))
         while x != self.maxx:
 
-            old_UD = self.UD
-
             if self.UD == 1:
-                count_U += 1
+                count_up += 1
 
             if (self.image[y][x-1] != BLACK_PIXEL and self.LR != 1) or\
                     (self.image[y][x + 1] != BLACK_PIXEL and self.LR != -1 and self.image[y+1][x+1] == BLACK_PIXEL):
@@ -109,18 +107,12 @@ class BoundaryTracing:
 
             ret_points.append([x, y])
 
-            if count_U > 5 and self.UD == -1:
+            if count_up > 5 and self.UD == -1:
                 fingertip += 1
-                count_U = 0
+                count_up = 0
 
-            #if old_UD != -1 and self.UD == -1:
-             #   fingertip += 1
-
-        print(fingertip)
-        test2 = np.asarray(mask)
-        test = Image.fromarray(test2)
-        plot = plt.imshow(test)
-        plt.show()
+        self.flush()
+        return [mask, fingertip, ret_points]
 
     def calcul_minx(self):
         minx = 0
