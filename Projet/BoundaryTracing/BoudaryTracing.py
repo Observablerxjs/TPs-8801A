@@ -101,10 +101,10 @@ class BoundaryTracing:
                 count = 0
             #print('x', x, 'y', y, 'pixel:', self.image[y][x], 'LR', self.LR, 'UD', self.UD)
 
-        test2 = np.asarray(mask)
-        test = Image.fromarray(test2)
-        plot = plt.imshow(test)
-        plt.show()
+        #test2 = np.asarray(mask)
+        #test = Image.fromarray(test2)
+        #plot = plt.imshow(test)
+        #plt.show()
 
     def calcul_minx(self):
         minx = 0
