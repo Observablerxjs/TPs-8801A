@@ -8,7 +8,7 @@ class DescriptorGenerator:
 
     @staticmethod
     def generate_origin_descriptor():
-        return [0] * (DescriptorGenerator.nb_points + 1)
+        return [0] * (DescriptorGenerator.desc_size + 1)
 
     @staticmethod
     def generate_descriptor(data):
@@ -26,9 +26,14 @@ class DescriptorGenerator:
             new_ys.append(f(new_xs[i]))
 
         new_ys = np.absolute(np.array(new_ys)).tolist()
+        print(new_ys)
         new_ys = new_ys[-2]
         new_ys = (np.array(new_ys) / new_ys[0]).tolist()
         new_ys = new_ys[:DescriptorGenerator.desc_size]
         new_ys.append(nb_fingertips)
 
         return new_ys
+
+    @staticmethod
+    def distance(desc1, desc2):
+        
