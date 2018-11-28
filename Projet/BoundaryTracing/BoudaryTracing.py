@@ -19,7 +19,7 @@ class BoundaryTracing:
         self.LR = 0
 
     def run(self, image):
-        self.image = image
+        self.image = image.astype('uint8')
         self.minx = self.calcul_minx()
         self.maxx = self.calcul_maxx()
         self.miny = self.calcul_miny()
@@ -70,7 +70,19 @@ class BoundaryTracing:
         count_up = 0
 
         mask = np.zeros((len(self.image), len(self.image[0])))
+
+        br = 0
+
         while x != self.maxx:
+
+            br += 1
+
+            if self.image[y][x] == BLACK_PIXEL:
+                while self.image[y][x] == BLACK_PIXEL and x != self.maxx:
+                    x += 1
+                self.UD = 0
+                self.LR = 1
+
             old_ud = self.UD
 
             if self.UD == 1:
@@ -84,9 +96,9 @@ class BoundaryTracing:
             elif (self.image[y + 1][x] != BLACK_PIXEL and self.UD != 1) or (self.image[y + 1][x - 1] != BLACK_PIXEL and self.LR == -1) or (self.image[y + 1][x + 1] != BLACK_PIXEL and self.LR == 1):
                 self.UD = -1
 
-            if self.image[y - self.UD][x - 1] != BLACK_PIXEL and self.LR != 1:
+            if self.image[y - self.UD][x - 1] != BLACK_PIXEL and (self.LR != 1 or (old_ud == self.UD and self.UD != 0)):
                 self.LR = -1
-            elif self.image[y - self.UD][x + 1] != BLACK_PIXEL and self.LR != -1:
+            elif self.image[y - self.UD][x + 1] != BLACK_PIXEL and (self.LR != -1 or (old_ud == self.UD and self.UD != 0)):
                 self.LR = 1
             else:
                 self.LR = 0
@@ -108,15 +120,21 @@ class BoundaryTracing:
 
             ret_points.append([x, y])
 
-            if count_up > 40 and self.UD == -1:
+            if count_up > 30 and self.UD == -1:
                 fingertip += 1
                 count_up = 0
 
             if self.UD != old_ud and self.UD == -1:
                 count_up = 0
 
+            if br == 800:
+                break
 
-        self.flush()
+
+        # test = np.asarray(self.image)
+        # t = Image.fromarray(test)
+        # plot = plt.imshow(t)
+        # plt.show()
         return [mask, fingertip, ret_points]
 
     def calcul_minx(self):
