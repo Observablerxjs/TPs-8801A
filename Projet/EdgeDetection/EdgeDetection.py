@@ -10,8 +10,8 @@ from scipy.ndimage import sobel
 
 class EdgeDetection:
     def __init__(self):
-        self.threshold_1 = 10
-        self.threshold_2 = 10
+        self.threshold_1 = 60
+        self.threshold_2 = 30
 
     def calc_offset(self, angle):
 
@@ -71,9 +71,6 @@ class EdgeDetection:
 
                     di = offset[0]
                     dj = offset[1]
-
-                    #if i == 111 and j == 159:
-                    #    print(grad_mags[i - di][j - dj], ' ', grad_mags[i][j], ' ', grad_mags[i + di][j + dj])
 
                     if grad_mags[i][j] >= grad_mags[i + di][j + dj] and grad_mags[i][j] >= grad_mags[i - di][j - dj]:
                         grad_mags_ret[i][j] = grad_mags[i][j]

@@ -127,10 +127,9 @@ class BoundaryTracing:
             if self.UD != old_ud and self.UD == -1:
                 count_up = 0
 
-            if br == 800:
+            if br == 1200:
+                print('hello')
                 break
-
-
         # test = np.asarray(self.image)
         # t = Image.fromarray(test)
         # plot = plt.imshow(t)
