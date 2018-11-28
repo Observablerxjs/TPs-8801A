@@ -4,6 +4,12 @@ from BoundaryTracing.BoudaryTracing import BoundaryTracing
 
 from Shared.Borg import Borg
 
+import matplotlib.pyplot as plt 
+import matplotlib.image as mpimg
+
+import numpy as np
+from PIL import Image
+
 class Pipeline(Borg):
     def __init__(self):
         self.edgeDetec = EdgeDetection()

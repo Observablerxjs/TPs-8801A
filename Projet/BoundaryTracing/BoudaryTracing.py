@@ -71,6 +71,7 @@ class BoundaryTracing:
 
         mask = np.zeros((len(self.image), len(self.image[0])))
         while x != self.maxx:
+            old_ud = self.UD
 
             if self.UD == 1:
                 count_up += 1
@@ -107,9 +108,13 @@ class BoundaryTracing:
 
             ret_points.append([x, y])
 
-            if count_up > 5 and self.UD == -1:
+            if count_up > 40 and self.UD == -1:
                 fingertip += 1
                 count_up = 0
+
+            if self.UD != old_ud and self.UD == -1:
+                count_up = 0
+
 
         self.flush()
         return [mask, fingertip, ret_points]

@@ -10,8 +10,8 @@ from scipy.ndimage import sobel
 
 class EdgeDetection:
     def __init__(self):
-        self.threshold_1 = 80
-        self.threshold_2 = 50
+        self.threshold_1 = 50
+        self.threshold_2 = 20
 
     def calc_offset(self, angle):
 
