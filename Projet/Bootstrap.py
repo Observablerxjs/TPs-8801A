@@ -53,6 +53,10 @@ class Bootstrap(Borg):
         else:
             img = np.asarray(Image.open('./asl_alphabet_test/I_test.jpg').convert('L'))
             res = Pipeline().run(img)
+            test = np.asarray(res[0])
+            t = Image.fromarray(test)
+            plot = plt.imshow(t)
+            plt.show()
             print(res[1])
 
         

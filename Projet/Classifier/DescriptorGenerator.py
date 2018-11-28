@@ -24,6 +24,7 @@ class DescriptorGenerator:
 
         for i in range(0, len(new_xs)):
             new_element = f(new_xs[i])
+            print(new_element)
             new_ys.append(complex(new_element[0], new_element[1]))
 
         new_ys = np.absolute(np.array(new_ys)).tolist()
