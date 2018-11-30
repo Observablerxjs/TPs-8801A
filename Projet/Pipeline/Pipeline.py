@@ -19,9 +19,5 @@ class Pipeline(Borg):
     def run(self, input):
         edges_image = self.edgeDetec.detect_edges(input)
         clipped_image = self.clip.clip(edges_image)
-        '''test = np.asarray(clipped_image)
-        t = Image.fromarray(test)
-        plot = plt.imshow(t)
-        plt.show()'''
         bound_image_data = self.boundTrac.run(clipped_image)
         return bound_image_data

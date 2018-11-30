@@ -7,7 +7,7 @@ class ReadWrite:
     @staticmethod
     def write(path, data):
         file = open(path, 'a+')
-        file.write(data)
+        file.write(data + '\n')
         file.close()
 
     

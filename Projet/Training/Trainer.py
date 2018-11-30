@@ -1,5 +1,6 @@
 from PIL import Image
 from os import listdir, walk
+from operator import add
 import numpy as np
 
 from Utils.ReadWrite import ReadWrite
@@ -26,14 +27,17 @@ class Trainer(Borg):
             if not(actu_letter in descs):
                 descs[actu_letter] = [DescriptorGenerator.generate_origin_descriptor(), 0]
 
+
             img = np.asarray(Image.open(self.path_data + training_data_files[i]).convert('L'))
             data = Pipeline().run(img)
             nw_desc = DescriptorGenerator.generate_descriptor(data)
 
-            descs[actu_letter] = np.array(descs[actu_letter]) + np.array([nw_desc, 1])
+            print(descs[actu_letter])
+
+            descs[actu_letter] = [list(map(add, descs[actu_letter][0], nw_desc)), descs[actu_letter][1] + 1]
 
         for key in descs:
             data_to_add = np.array(descs[key][0]) / descs[key][1]
-            ReadWrite.write(self.path_model, key + " ".join(str(x) for x in data_to_add.list()))
+            ReadWrite.write(self.path_model, key + " ".join(str(x) for x in data_to_add.tolist()))
 
 

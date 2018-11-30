@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt 
 import matplotlib.image as mpimg
 import numpy as np
+import re
 from PIL import Image
 
 from Utils.ArgParser import ArgParser
@@ -41,7 +42,9 @@ class Bootstrap(Borg):
 
             for i in descs:
                 nw_letter = i[0]
-                nw_desc = [str(j) for j in range(1, len(i))]
+                nw_desc = [float(j) for j in re.findall(r"[\d.]+", i)]
+                print(desc_i)
+                print(nw_desc)
                 dist_actu = DescriptorGenerator.distance(desc_i, nw_desc)
                 if dist_actu < min_diff:
                     min_diff = dist_actu
