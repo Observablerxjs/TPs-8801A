@@ -32,8 +32,6 @@ class Trainer(Borg):
             data = Pipeline().run(img)
             nw_desc = DescriptorGenerator.generate_descriptor(data)
 
-            print(descs[actu_letter])
-
             descs[actu_letter] = [list(map(add, descs[actu_letter][0], nw_desc)), descs[actu_letter][1] + 1]
 
         for key in descs:

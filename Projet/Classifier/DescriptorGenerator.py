@@ -8,7 +8,7 @@ class DescriptorGenerator:
 
     @staticmethod
     def generate_origin_descriptor():
-        return [0] * (DescriptorGenerator.desc_size + 1)
+        return [0] * (DescriptorGenerator.desc_size)
 
     @staticmethod
     def generate_descriptor(data):
@@ -30,7 +30,8 @@ class DescriptorGenerator:
         new_ys = new_ys[1:]
         new_ys = (np.array(new_ys) / new_ys[0]).tolist()
         new_ys = new_ys[:DescriptorGenerator.desc_size]
-        new_ys.append(abs(complex(nb_fingertips, 0)))
+        #new_ys.append(abs(complex(nb_fingertips, 0)))
+        #print(new_ys)
 
         return new_ys
 
