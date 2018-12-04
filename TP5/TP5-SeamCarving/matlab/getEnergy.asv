@@ -5,6 +5,8 @@ function [ energy ] = getEnergy( img )
 %   La fonction doit pouvoir fonctionner avec un nombre indéfini de canaux !
 
 	% TODO : Question 1
+    energy = ones(size(img,1),size(img,2));
+    
     [FX, FY] = gradient(img);
     
     normFX = zeros(size(FX,1),size(FX,2));
@@ -14,7 +16,21 @@ function [ energy ] = getEnergy( img )
         normFX = normFX + FX(:,:,k).^2;
         normFY = normFY + FY(:,:,k).^2; 
     end
+    normFX = normFX.^(1/2);
+    normFY = normFY.^(1/2);
     
-    energy = (normFX + normFY).^(1/2);
+    
+    for i=1:size(img,1)
+        for j=1:size(img,2)
+            
+            tic;
+            reshapedFX = reshape(FX(i, j, :), [size(FX(i, j, :), 3), 1, 1]);
+            reshapedFY = reshape(FY(i, j, :), [size(FY(i, j, :), 3), 1, 1]);
+            toc;
+            
+            energy(i, j) = (norm(reshapedFX, 2)^2 + norm(reshapedFY, 2)^2)^(1/2);
+            
+        end
+    end
 end
 

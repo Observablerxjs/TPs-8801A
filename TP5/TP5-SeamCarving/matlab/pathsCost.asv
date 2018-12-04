@@ -5,6 +5,7 @@ function [ costs ] = pathsCost( energy )
 
     % TODO : Question 2
     costs = zeros(size(energy));
+    
     for i=1:size(costs,1)
         for j=1:size(costs,2)
             if i == 1
@@ -15,10 +16,11 @@ function [ costs ] = pathsCost( energy )
                 elseif j == size(costs,2)
                     costs(i,j) = energy(i,j) + min([costs(i - 1,j), costs(i - 1,j - 1)]);    
                 else
-                    costs(i,j) = energy(i,j) + min([costs(i - 1,j - 1), costs(i - 1,j), costs(i - 1,j + 1)]); 
+                    costs(i,j) = energy(i,j) + min([costs(i - 1,j), costs(i - 1,j - 1)]); 
                 end
             end
         end
     end
+
 end
 
