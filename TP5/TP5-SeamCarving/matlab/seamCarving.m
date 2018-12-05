@@ -54,6 +54,22 @@ end
 function dst = enlargeH( src, newWidth )
 
     % TODO : Question 4
-    dst = imresize( src, [ size(src,1), newWidth ]);
+    
+    for k=1:newWidth - size(src,2)
+       
+        en = getEnergy(src);
+        costs = pathsCost(en);
+        seam = getSeam(costs);
+        
+        tmpImage = zeros(size(src,1), size(src,2) + 1, size(src,3));
+        
+        for i=1:size(seam, 1)
+            tmpImage(i, :, :) = [src(i, 1:seam(i)-1,:), src(i, seam(i)-1:end,:)];
+        end
+        
+        src = tmpImage;
+    end
+    
+    dst = src;
     
 end
