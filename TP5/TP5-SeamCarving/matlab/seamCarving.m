@@ -54,22 +54,47 @@ end
 function dst = enlargeH( src, newWidth )
 
     % TODO : Question 4
-    
-    for k=1:newWidth - size(src,2)
+    result_seam = zeros(size(src,1),1,newWidth - size(src,2));
+    src_temp = src;
+    for k=1:newWidth - size(src_temp,2) 
        
-        en = getEnergy(src);
+        en = getEnergy(src_temp);
         costs = pathsCost(en);
         seam = getSeam(costs);
         
-        tmpImage = zeros(size(src,1), size(src,2) + 1, size(src,3));
+        result_seam(:,:,k) = seam;
+        
+        tmpImage = zeros(size(src_temp,1), size(src_temp,2) - 1, size(src_temp,3));
         
         for i=1:size(seam, 1)
-            tmpImage(i, :, :) = [src(i, 1:seam(i)-1,:), src(i, seam(i)-1:end,:)];
+            tmpImage(i, :, :) = [src_temp(i, 1:seam(i)-1,:), src_temp(i, seam(i)+1:end,:)];
         end
         
-        src = tmpImage;
+        src_temp = tmpImage;
     end
     
+    for k=1:newWidth - size(src,2) 
+        tmpImage = zeros(size(src,1), size(src,2) + 1, size(src,3));
+        seam = result_seam(:,:,k);
+        for i=1:size(seam, 1)
+            %newpixelIndex = seam(i);
+            if seam(i)~= 1 && seam(i) ~= size(src,2) 
+                tmpImage(i, :, :) = [src(i, 1:seam(i)-1,:),((src(i, seam(i)-1,:)+src(i, seam(i)+1,:))/2),((src(i, seam(i)-1,:)+src(i, seam(i)+1,:))/2),src(i, seam(i)+1:end,:)];
+            else
+                if seam(i) == 1
+                    tmpImage(i, :, :) = [src(i, 1:seam(i)-1,:),(src(i, seam(i)+1,:)),(src(i, seam(i)+1,:)),src(i, seam(i)+1:end,:)];
+                else
+                    tmpImage(i, :, :) = [src(i, 1:seam(i)-1,:),(src(i, seam(i)-1,:)),(src(i, seam(i)-1,:)),src(i, seam(i)+1:end,:)];
+                end
+            end
+%             disp(size(tmpImage(i,:,:)));
+%             disp(size(src(i,:,:)));
+%             disp(size([src(i, 1:seam(i)-1,:),src(i, newpixelIndex,:),src(i, newpixelIndex,:), src(i, seam(i)+1:end,:)]));
+%             disp(seam(i));
+        end
+        src = tmpImage;
+    end
+
     dst = src;
     
 end
