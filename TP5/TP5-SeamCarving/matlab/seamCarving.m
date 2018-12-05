@@ -79,12 +79,12 @@ function dst = enlargeH( src, newWidth )
         for i=1:size(seam, 1)
             %newpixelIndex = seam(i);
             if seam(i)~= 1 && seam(i) ~= size(src,2) 
-                tmpImage(i, :, :) = [src(i, 1:seam(i)-1,:),((src(i, seam(i)-1,:)+src(i, seam(i)+1,:))/2),((src(i, seam(i)-1,:)+src(i, seam(i)+1,:))/2),src(i, seam(i)+1:end,:)];
+                tmpImage(i, :, :) = [src(i, 1:seam(i),:),((src(i, seam(i)-1,:)+src(i, seam(i)+1,:))/2),src(i, seam(i)+1:end,:)];
             else
                 if seam(i) == 1
-                    tmpImage(i, :, :) = [src(i, 1:seam(i)-1,:),(src(i, seam(i)+1,:)),(src(i, seam(i)+1,:)),src(i, seam(i)+1:end,:)];
+                    tmpImage(i, :, :) = [src(i, 1:seam(i),:),(src(i, seam(i),:)),src(i, seam(i)+1:end,:)];
                 else
-                    tmpImage(i, :, :) = [src(i, 1:seam(i)-1,:),(src(i, seam(i)-1,:)),(src(i, seam(i)-1,:)),src(i, seam(i)+1:end,:)];
+                    tmpImage(i, :, :) = [src(i, 1:seam(i),:),(src(i, seam(i),:))];
                 end
             end
 %             disp(size(tmpImage(i,:,:)));
@@ -94,7 +94,5 @@ function dst = enlargeH( src, newWidth )
         end
         src = tmpImage;
     end
-
     dst = src;
-    
 end
