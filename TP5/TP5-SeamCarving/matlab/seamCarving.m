@@ -56,10 +56,12 @@ function dst = enlargeH( src, newWidth )
     % TODO : Question 4
     j = 0;
     originalWidth = size(src,2);
+    step = round((newWidth - originalWidth) / 1.3);
+    
     while j < newWidth - originalWidth
                 
-        if newWidth - originalWidth - j >= 10
-            max_count = 10;
+        if newWidth - originalWidth - j >= step
+            max_count = step;
         else
             max_count = newWidth - originalWidth - j;
         end
@@ -98,9 +100,9 @@ function dst = enlargeH( src, newWidth )
                     end
                 end
             end
+            src = tmpImage;
         end
         j = j + max_count;
-        src = tmpImage;
     end
     dst = src;
 end
