@@ -121,7 +121,6 @@ class BoundaryTracing:
                 count_up = 0
 
             if br == 2000:
-                print('hello')
                 break
 
         return [mask, fingertip, ret_points]

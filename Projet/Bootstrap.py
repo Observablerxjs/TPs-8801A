@@ -44,7 +44,6 @@ class Bootstrap(Borg):
                 nw_letter = i[0]
                 nw_desc = [float(j) for j in re.findall(r"[\d.]+", i)]
                 dist_actu = DescriptorGenerator.distance(desc_i, nw_desc)
-                print(dist_actu, ' ', nw_letter)
                 if dist_actu < min_diff:
                     min_diff = dist_actu
                     letter_actu = nw_letter
