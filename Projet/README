@@ -1,0 +1,7 @@
+1. python3 et pip3 doivent être installé préalablemment sur la machine pour que le code soit exécutable
+2. Appeler le script configure.sh: sh configure.sh
+3. Pour exécuter la fonctionnalité de l'article(prédire le nombre de doigts levés), exécuter la commande : python3 Main.py -i <image du signe a evaluer­­>
+4. Pour entrainer le modèle pour la classification: python3 Main.py -m training 
+5. Pour classifier une image: python3 Main.py -m classification -i <image du signe a evaluer­­>  
+6. Pour voir toutes les options disponibles : python3 Main.py -h
+7. Pour entrainer un nouveau modèle, il faut tout d'abord effacer le dernier modèle

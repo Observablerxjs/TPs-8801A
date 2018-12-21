@@ -34,13 +34,6 @@ class BoundaryTracing:
         self.miny = None
         self.maxy = None
 
-    # def optimal_y_level(self):
-    #     print(self.maxy)
-    #     print(self.miny)
-    #     dy = self.maxy - self.miny
-    #     optimaly = math.floor(0.33 * dy)
-    #     return optimaly
-
     def initial_trace_direction(self):
         self.initial_trace_point = (0, 0)
         for i in range(self.minx, self.maxx):
@@ -130,10 +123,7 @@ class BoundaryTracing:
             if br == 2000:
                 print('hello')
                 break
-        # test = np.asarray(self.image)
-        # t = Image.fromarray(test)
-        # plot = plt.imshow(t)
-        # plt.show()
+
         return [mask, fingertip, ret_points]
 
     def calcul_minx(self):

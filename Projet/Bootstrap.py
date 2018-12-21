@@ -44,6 +44,7 @@ class Bootstrap(Borg):
                 nw_letter = i[0]
                 nw_desc = [float(j) for j in re.findall(r"[\d.]+", i)]
                 dist_actu = DescriptorGenerator.distance(desc_i, nw_desc)
+                print(dist_actu, ' ', nw_letter)
                 if dist_actu < min_diff:
                     min_diff = dist_actu
                     letter_actu = nw_letter
@@ -54,10 +55,6 @@ class Bootstrap(Borg):
         else:
             img = np.asarray(Image.open(p['input_image']).convert('L'))
             res = Pipeline().run(img)
-            test = np.asarray(res[0])
-            t = Image.fromarray(test)
-            plot = plt.imshow(t)
-            plt.show()
             print(res[1])
 
         
